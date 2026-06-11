@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+
+
+enum MessageRole {
+  ai_assistant
+  human_assistant
+  customer
+}
+
+enum MessageStatus {
+  pending
+  sent
+  delivered
+  read
+  failed
+}
+
+enum LeadStatus {
+  new
+  contacted
+  confirmed
+  canceled
+}
+
+enum KbStatus {
+  open
+  handled
+  added_to_kb
+}
+
+// -----------------------------------------------------------------------------
+// MODELS
+// -----------------------------------------------------------------------------
+
+model User {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String?
+  phoneNumber String    @unique @map("phone_number")
+  aiPaused    Boolean   @default(false) @map("ai_paused")
+  pausedAt    DateTime? @map("paused_at")
+  firstSeen   DateTime  @default(now()) @map("first_seen")
+  lastSeen    DateTime  @default(now()) @map("last_seen")
+  status      String    @default("active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  // Relations
+  messages            Message[]
+  leads               Lead[]
+  unansweredQuestions UnansweredQuestion[]
+
+  @@map("users") // Maps the Prisma model to the exact lowercase table name in Postgres
+}
+
+model Message {
+  id         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String        @map("user_id") @db.Uuid
+  role       MessageRole
+  content    String
+  type       String        @default("text")
+  status     MessageStatus @default(sent)
+  createdAt  DateTime      @default(now()) @map("created_at")
+
+  // Relation mapping with Cascade Delete
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Indexes for fast dashboard loading
+  @@index([userId])
+  @@index([createdAt(sort: Desc)])
+  @@map("messages")
+}
+
+model Lead {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId          String     @map("user_id") @db.Uuid
+  name            String?
+  serviceInterest String?    @map("service_interest")
+  gender          String?
+  status          LeadStatus @default(new)
+  createdAt       DateTime   @default(now()) @map("created_at")
+
+  // Relation mapping with Cascade Delete
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Index for filtering dashboard pipelines
+  @@index([status])
+  @@map("leads")
+}
+
+model UnansweredQuestion {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  question  String
+  kbStatus  KbStatus @default(open) @map("kb_status")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relation mapping with Cascade Delete
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Index for fast "Open Questions" queries
+  @@index([kbStatus])
+  @@map("unanswered_questions")
+}
+
