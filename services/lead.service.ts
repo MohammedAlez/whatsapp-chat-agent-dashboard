@@ -3,19 +3,23 @@ import { supabase } from '@/lib/supabase';
 export const LeadService = {
   
   // 1. Fetch Stats for the Top Cards
+  // new
+  // contacted
+  // confirmed
+  // canceled
   async getLeadStats() {
-    const [total, newLeads, contacted, enrolled] = await Promise.all([
+    const [total, newLeads, contacted, confirmed] = await Promise.all([
       supabase.from('leads').select('*', { count: 'exact', head: true }),
       supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'new'),
       supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'contacted'),
-      supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'enrolled')
+      supabase.from('leads').select('*', { count: 'exact', head: true }).eq('status', 'confirmed')
     ]);
 
     return {
       total: total.count || 0,
       new: newLeads.count || 0,
       contacted: contacted.count || 0,
-      enrolled: enrolled.count || 0,
+      confirmed: confirmed.count || 0,
     };
   },
 

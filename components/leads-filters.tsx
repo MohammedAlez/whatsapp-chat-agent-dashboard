@@ -8,10 +8,10 @@ const filters = [
   { id: "all", label: "All" },
   { id: "new", label: "new" },
   { id: "contacted", label: "contacted" },
-  { id: "enrolled", label: "enrolled" },
+  { id: "confirmed", label: "confirmed" },
 ]
 
-export default function LeadsFilters({ currentStatus, currentCourse }: { currentStatus: string, currentCourse: string }) {
+export default function LeadsFilters({ currentStatus, currentServiceInterest }: { currentStatus: string, currentServiceInterest: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -53,7 +53,7 @@ export default function LeadsFilters({ currentStatus, currentCourse }: { current
       {/* Course Dropdown */}
       <div className="rounded-2xl flex gap-2 flex-col lg:flex-row">
         <Select 
-          value={currentCourse} 
+          value={currentServiceInterest} 
           onValueChange={(val) => updateFilter('course', val)}
         >
           <SelectTrigger className="w-full md:w-48 p-5">

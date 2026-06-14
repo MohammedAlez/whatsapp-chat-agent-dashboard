@@ -36,7 +36,7 @@ const cards = [
     iconColor: "text-amber-400",
   },
   {
-    label:     "Enrolled",
+    label:     "Confirmed",
     value:     7,
     trend:     { direction: "up", label: "+2" },
     icon:      GraduationCap,
@@ -49,7 +49,7 @@ interface StatsProps {
     total: number;
     new: number;
     contacted: number;
-    enrolled: number;
+    confirmed: number;
 }
 
 export function LeadsCards({data}:{data:StatsProps}) {
@@ -79,8 +79,8 @@ export function LeadsCards({data}:{data:StatsProps}) {
     iconColor: "text-amber-400",
   },
   {
-    label:     "Enrolled",
-    value:     data.enrolled,
+    label:     "confirmed",
+    value:     data.confirmed,
     icon:      GraduationCap,
     iconBg:    "bg-emerald-500/20",
     iconColor: "text-emerald-400",

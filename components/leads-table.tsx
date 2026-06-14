@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { MessageCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { LeadStatus } from "@/app/generated/prisma"
 
 const leads = [
   {
@@ -67,19 +68,28 @@ const leads = [
 
 
 interface LeadProps {
-    id: any;
-    name: any;
-    course_interest: any;
-    gender: any;
-    source: any;
-    status: any;
-    date: any;
-    phone: any;
-    contact_id: any;
-    contacts: {
-        platform_id: any;
-    }[];
+    id: string;
+    name: string;
+    serviceInterest: string;
+    gender: string | null;
+    status: LeadStatus;
+    createdAt: Date;
+    phone: string;
 }
+// interface LeadProps {
+//     id: any;
+//     name: any;
+//     course_interest: any;
+//     gender: any;
+//     source: any;
+//     status: any;
+//     date: any;
+//     phone: any;
+//     contact_id: any;
+//     contacts: {
+//         platform_id: any;
+//     }[];
+// }
 
 
 export function LeadsTable({data}:{data:LeadProps[]}) {
@@ -96,13 +106,10 @@ export function LeadsTable({data}:{data:LeadProps[]}) {
               Customer
             </TableHead>
             <TableHead className="text-xs px-4 uppercase font-semibold tracking-wider text-muted-foreground">
-              Course Interest
+              Service Interest
             </TableHead>
             <TableHead className="text-xs px-4 uppercase font-semibold tracking-wider text-muted-foreground">
               Gender
-            </TableHead>
-            <TableHead className="text-xs px-4 uppercase font-semibold tracking-wider text-muted-foreground">
-              Source
             </TableHead>
             <TableHead className="text-xs px-4 uppercase font-semibold tracking-wider text-muted-foreground">
               Date
@@ -147,7 +154,7 @@ export function LeadsTable({data}:{data:LeadProps[]}) {
 
               {/* Course */}
               <TableCell className="text-sm text-foreground font-medium">
-                {lead.course_interest}
+                {lead.serviceInterest}
               </TableCell>
 
               {/* Gender */}
@@ -165,14 +172,10 @@ export function LeadsTable({data}:{data:LeadProps[]}) {
                 </Badge>
               </TableCell>
 
-              {/* Source — plain, secondary */}
-              <TableCell className="text-sm text-muted-foreground">
-                {lead.source}
-              </TableCell>
 
               {/* Date — plain, secondary */}
               <TableCell className="text-sm text-muted-foreground">
-                {lead.date}
+                {(lead.createdAt.toISOString().slice(0,10))}
               </TableCell>
 
               {/* Status */}

@@ -6,19 +6,21 @@ import { SiteHeader } from '@/components/site-header'
 import { LeadService } from '@/services/lead.service'
 import React, { Suspense } from 'react'
 import LeadsTableWrapper from './leads-table-wrapper'
+import { getLeadStats } from '@/app/actions/lead.actions'
 
 async function Page({
   searchParams,
 }: {
-  searchParams: Promise<{ status?: string; course?: string; q?: string }>
+  searchParams: Promise<{ status?: string; currentServiceInterest?: string; q?: string }>
 }) {
 
-  const {status='all', course='all', q=''} = await searchParams
+  const {status='all', currentServiceInterest='all', q=''} = await searchParams
 
   console.log("status,", status)
-  console.log("course", course)
+  console.log("currentServiceInterest", currentServiceInterest)
 
-  const stats = await LeadService.getLeadStats()
+  // const stats = await LeadService.getLeadStats()
+  const stats = await getLeadStats()
 
   return (
     <>
@@ -32,13 +34,13 @@ async function Page({
           {/* Filters need to know the current active state */}
           <LeadsFilters 
             currentStatus={status} 
-            currentCourse={course} 
+            currentServiceInterest={currentServiceInterest} 
           />
           
-          <Suspense fallback={<TableSkelton />} key={`${status}-${course}-${q}`}>
+          <Suspense fallback={<TableSkelton />} key={`${status}-${currentServiceInterest}-${q}`}>
             <LeadsTableWrapper
               status={status}
-              course={course}
+              currentServiceInterest={currentServiceInterest}
               q={q}
             />
           </Suspense>
