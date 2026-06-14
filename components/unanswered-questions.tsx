@@ -5,17 +5,17 @@ import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import { ArrowRight, MessageCircle } from 'lucide-react'
+import { KbStatus } from '@/app/generated/prisma'
 
 type UnansweredQuestions = {
-    id: any;
-    question: any;
-    created_at: any;
-    kb_status: any;
-    contact_id: any;
-    contacts: {
-        platform_id: any;
-        platform: any;
-    }[];
+    id: string;
+    question: string;
+    createdAt: Date;
+    kbStatus: KbStatus;
+    customer: {
+        name: string;
+        phoneNumber: string;
+    };
 }[]
 
 function UnansweredQuestions({unanswered_questions}:{unanswered_questions:UnansweredQuestions}) {
@@ -112,7 +112,7 @@ function UnansweredQuestions({unanswered_questions}:{unanswered_questions:Unansw
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
                                         <p className="text-xs text-muted-foreground">
-                                            {getRelativeTime(question.created_at)}
+                                            {getRelativeTime(question.createdAt.toISOString())}
                                         </p>
                                         <Button size="sm" variant="link" className="text-sm  text-purple-400 bg-none hover:bg-none border-none hover:text-purple-600 cursor-pointer">
                                             <MessageCircle className="ml-2 h-4 w-4" />

@@ -58,7 +58,7 @@ export async function getConversations(filter: 'all' | 'ai_handling' | 'escalate
  */
 export async function searchConversations(searchTerm: string) {
   try {
-    return await prisma.user.findMany({
+    const users = await prisma.user.findMany({
       where: {
         OR: [
           { phoneNumber: { contains: searchTerm, mode: 'insensitive' } },
@@ -67,10 +67,29 @@ export async function searchConversations(searchTerm: string) {
       },
       select: {
         id: true,
-        phoneNumber: true,
         name: true,
+        phoneNumber: true,
+        aiPaused: true,
+        lastSeen: true,
+        messages: {
+          orderBy: { createdAt: 'desc' },
+          take: 1, // Only get the single most recent message
+          select: {
+            content: true,
+            createdAt: true,
+          },
+        },
       },
     });
+
+    return users.map((user) => ({
+      id: user.id,
+      name: user.name || user.phoneNumber, // Fallback to phone if no name
+      phoneNumber: user.phoneNumber,
+      ai_paused: user.aiPaused,
+      last_seen: user.lastSeen,
+      lastMessage: user.messages[0] || { content: 'No messages yet', created_at: user.lastSeen },
+    })); 
   } catch (error) {
     console.error("Error searching conversations:", error);
     throw new Error("Failed to search conversations");
@@ -152,5 +171,33 @@ export async function sendMessage(userId: string, content: string, type: string 
   } catch (error) {
     console.error(`Error saving manual message for user ${userId}:`, error);
     throw new Error("Failed to send message");
+  }
+}
+
+
+export async function toggleAiPause(userId: string, shouldPause: boolean) {
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        aiPaused: shouldPause,
+        // Set the timestamp if pausing, clear it out if resuming
+        pausedAt: shouldPause ? new Date() : null,
+      },
+      select: {
+        id: true,
+        aiPaused: true,
+        pausedAt: true,
+      },
+    });
+
+    // Automatically purges the Next.js data cache for your chat layouts 
+    // to make sure the sidebar lists and headers instantly change their status indicators
+    revalidatePath("/chat"); 
+
+    return { success: true, user: updatedUser };
+  } catch (error) {
+    console.error(`[SERVER ACTION ERROR] Failed to toggle AI pause for user ${userId}:`, error);
+    return { success: false, error: "Failed to update AI status engine." };
   }
 }

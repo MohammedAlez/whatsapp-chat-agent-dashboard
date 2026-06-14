@@ -30,6 +30,7 @@ export function NavMain({
         <SidebarGroupLabel>Overview</SidebarGroupLabel>
         <SidebarMenu>
           {items.map((item) => {
+            // console.log(pathname.split)
             const isActive = pathname === item.url
             return (
               <SidebarMenuItem key={item.title}>

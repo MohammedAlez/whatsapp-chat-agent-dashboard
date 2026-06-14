@@ -100,7 +100,7 @@ async function ConversationContent({ chatId, userInfo }: ContentProps) {
                 <ChevronLeft className="w-6 h-6 text-foreground" />
               </Link>
               <div className="flex-1">
-                  <ChatHeader userInfo={userInfo}/>
+                  <ChatHeader userInfo={userInfo} chatId={chatId}/>
               </div>
           </div>
           
