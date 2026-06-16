@@ -15,7 +15,7 @@ function Page() {
               
               {/* Top Stats Cards */}
               <KBHeader />
-              <KBFilters />
+              {/* <KBFilters /> */}
               <div className="flex ">
                   <div className="flex-1">
                     <KBEntries />

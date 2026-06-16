@@ -38,10 +38,9 @@ enum LeadStatus {
   canceled
 }
 
-enum KbStatus {
+enum QuestionStatus {
   open
   handled
-  added_to_kb
 }
 
 // -----------------------------------------------------------------------------
@@ -106,14 +105,16 @@ model UnansweredQuestion {
   id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   question  String
-  kbStatus  KbStatus @default(open) @map("kb_status")
+  status    QuestionStatus @default(open)
+  addedToKb Boolean        @default(false) @map("added_to_kb") // Separate boolean flag
   createdAt DateTime @default(now()) @map("created_at")
 
   // Relation mapping with Cascade Delete
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  // Index for fast "Open Questions" queries
-  @@index([kbStatus])
+  // Indexes optimized for filtering and performance queries
+  @@index([status])
+  @@index([addedToKb])
   @@map("unanswered_questions")
 }
 

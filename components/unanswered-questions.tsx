@@ -5,17 +5,15 @@ import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Separator } from './ui/separator'
 import { ArrowRight, MessageCircle } from 'lucide-react'
-import { KbStatus } from '@/app/generated/prisma'
+import { QuestionStatus } from '@/app/generated/prisma'
 
 type UnansweredQuestions = {
     id: string;
     question: string;
     createdAt: Date;
-    kbStatus: KbStatus;
-    customer: {
-        name: string;
-        phoneNumber: string;
-    };
+    status: QuestionStatus;
+    customerName: string;
+    customerPhone: string;
 }[]
 
 function UnansweredQuestions({unanswered_questions}:{unanswered_questions:UnansweredQuestions}) {
@@ -48,22 +46,22 @@ function UnansweredQuestions({unanswered_questions}:{unanswered_questions:Unansw
     ]
 
     function getRelativeTime(dateString: string) {
-    const now = new Date();
-    const past = new Date(dateString);
-    const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
+        const now = new Date();
+        const past = new Date(dateString);
+        const diffInSeconds = Math.floor((now.getTime() - past.getTime()) / 1000);
 
-    if (diffInSeconds < 60) return 'just now';
-    
-    const diffInMinutes = Math.floor(diffInSeconds / 60);
-    if (diffInMinutes < 60) return `${diffInMinutes} min${diffInMinutes > 1 ? 's' : ''} ago`;
-    
-    const diffInHours = Math.floor(diffInMinutes / 60);
-    if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
-    
-    const diffInDays = Math.floor(diffInHours / 24);
-    if (diffInDays < 30) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
-    
-    return past.toLocaleDateString(); // Fallback for very old dates
+        if (diffInSeconds < 60) return 'just now';
+        
+        const diffInMinutes = Math.floor(diffInSeconds / 60);
+        if (diffInMinutes < 60) return `${diffInMinutes} min${diffInMinutes > 1 ? 's' : ''} ago`;
+        
+        const diffInHours = Math.floor(diffInMinutes / 60);
+        if (diffInHours < 24) return `${diffInHours} hour${diffInHours > 1 ? 's' : ''} ago`;
+        
+        const diffInDays = Math.floor(diffInHours / 24);
+        if (diffInDays < 30) return `${diffInDays} day${diffInDays > 1 ? 's' : ''} ago`;
+        
+        return past.toLocaleDateString(); // Fallback for very old dates
     }
     console.log("unanswered_questions", unanswered_questions)
     return (
@@ -104,7 +102,7 @@ function UnansweredQuestions({unanswered_questions}:{unanswered_questions:Unansw
                                             </p>
                                         </div> */}
                                         <CardTitle className="text-sm font-medium">
-                                            +966 55 123 4567
+                                            +{question.customerPhone}
                                         </CardTitle>
                                         <p className="text-xs text-muted-foreground">
                                             {question.question}

@@ -51,7 +51,7 @@ export default function LeadsFilters({ currentStatus, currentServiceInterest }: 
       </div>
 
       {/* Course Dropdown */}
-      <div className="rounded-2xl flex gap-2 flex-col lg:flex-row">
+      {/* <div className="rounded-2xl flex gap-2 flex-col lg:flex-row">
         <Select 
           value={currentServiceInterest} 
           onValueChange={(val) => updateFilter('course', val)}
@@ -67,7 +67,7 @@ export default function LeadsFilters({ currentStatus, currentServiceInterest }: 
             </SelectGroup>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -11,11 +11,11 @@ const filters = [
   { id: "all", label: "All" },
   { id: "open", label: "Open" },
   { id: "handled", label: "Handled" },
-  { id: "added-to-kb", label: "Added to KB" },
+  // { id: "added-to-kb", label: "Added to KB" },
 ]
 
 
-export function QuestionsFilters({ currentStatus, currentCourse }: { currentStatus: string, currentCourse: string }) {
+export function QuestionsFilters({ currentStatus }: { currentStatus: string }) {
   
     const router = useRouter();
       const searchParams = useSearchParams();
@@ -56,7 +56,7 @@ export function QuestionsFilters({ currentStatus, currentCourse }: { currentStat
           </div>
     
           {/* Course Dropdown */}
-          <div className="rounded-2xl flex gap-2 flex-col lg:flex-row">
+          {/* <div className="rounded-2xl flex gap-2 flex-col lg:flex-row">
             <Select 
               value={currentCourse} 
               onValueChange={(val) => updateFilter('course', val)}
@@ -72,7 +72,7 @@ export function QuestionsFilters({ currentStatus, currentCourse }: { currentStat
                 </SelectGroup>
               </SelectContent>
             </Select>
-          </div>
+          </div> */}
         </div>
     )
 }

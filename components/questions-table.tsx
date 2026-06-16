@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { MessageCircle, Library, Check } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { QuestionStatus } from '@/app/generated/prisma'
 
 
 
@@ -17,14 +18,14 @@ const questions = [
 
 
 interface QuestionProps {
-  id: any;
-  question: any;
-  status: any;
-  date: any;
-  contactId: any;
-  customerName: any;
-  customerPhone: any;
-  courseInterest: any;
+  id: string;
+  question: string;
+  status: QuestionStatus;
+  addedToKb: boolean;
+  createdAt: Date;
+  userId: string;
+  customerName: string;
+  customerPhone: string;
 }
 
 export function QuestionsTable({data}:{data:QuestionProps[]}) {
@@ -65,14 +66,14 @@ export function QuestionsTable({data}:{data:QuestionProps[]}) {
                     <span className="text-[10px] text-muted-foreground italic">asked via text</span>
                 </div>
                 </TableCell>
-                <TableCell className="text-sm text-muted-foreground">{(item.date as String).slice(0,10)}</TableCell>
+                <TableCell className="text-sm text-muted-foreground">{(item.createdAt.toISOString()).slice(0,10)}</TableCell>
                 <TableCell>
                 <Badge variant="outline" className="bg-orange-500/10 text-orange-500 border-none px-2.5 py-0.5 font-normal capitalize">{item.status}</Badge>
                 </TableCell>
                 <TableCell className="text-right">
                 <div className="flex items-center justify-end gap-2">
                     <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground hover:text-foreground hover:bg-muted">
-                    <MessageCircle className="h-4 w-4" /> open
+                    <MessageCircle className="h-4 w-4" /> reply
                     </Button>
                     <Button variant="outline" size="sm" className="gap-1.5 border-border bg-transparent hover:bg-muted">
                     <Library className="h-4 w-4" /> add to KB
